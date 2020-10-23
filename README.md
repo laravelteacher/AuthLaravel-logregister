@@ -138,7 +138,7 @@ class User extends Authenticatable implements JWTSubject
 	
 	
 	
-	
+# make controller	
 	
 php artisan make:controller AuthController
 	
@@ -209,23 +209,11 @@ use Validator;
     }
 	
 	
-	now I test it in frontend
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Add in api.php
+## Add in api.php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
