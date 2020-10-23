@@ -21,6 +21,231 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+
+##install jwt and make login register
+
+
+# Install JWT package via composer:
+         composer require tymon/jwt-auth
+		 
+
+
+
+
+
+
+
+
+
+
+
+# Add service provider
+      Add the service provider to the providers array in the config/app.php config file as follows:
+	  
+	  /*
+         * Package Service Providers...
+         */
+        'Tymon\JWTAuth\Providers\LaravelServiceProvider',
+	  
+	  
+	  'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
+        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory'
+        
+
+
+
+
+
+
+
+
+
+# Publish the config:
+      php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+	  
+	  
+	  
+	  
+	  
+	  
+
+
+
+
+
+
+# Configure Auth guard inside the config/auth.php:
+api
+jwt
+	  
+	  
+	  
+	  
+	  
+
+# Generate secret key:
+     php artisan jwt:secret
+	 
+	 This will update your .env 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+
+# Update your User model:
+
+// JWT contract
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+
+class User extends Authenticatable implements JWTSubject 
+
+/**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+     public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    public function setPasswordAttribute($password)
+    {
+        if ( $password !== null & $password !== "" ) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
+	
+	
+	
+# Update app/Providers/AppServiceProvider:	
+   use Illuminate\Support\Facades\Schema;	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+php artisan make:controller AuthController
+	
+   use Illuminate\Support\Facades\Auth;
+use Validator;
+
+
+    public function register(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+
+        $user = User::create(array_merge(
+                    $validator->validated()
+                ));
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => $user
+        ], 201);
+    }
+	
+	
+	
+	
+	protected function createNewToken($token){
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user()
+        ]);
+    }
+	
+	
+	public function login(Request $request){
+    	$validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if (! $token = auth()->attempt($validator->validated())) {
+            return response()->json(['error' => 'Either email or password is wrong.'], 401);
+        }
+        // Mail::to('alirezamosavi346@gmail.com')->send(new NewUserNotification()); 
+        return $this->createNewToken($token);
+    }
+	
+	
+	public function logout() {
+        auth()->logout();
+        return response()->json(['message' => 'User successfully logged out']);
+    }
+	
+	
+	public function userProfile() {
+        return response()->json(auth()->user());
+    }
+	
+	
+	now I test it in frontend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Add in api.php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::get('user-profile', 'AuthController@userProfile');
+});
+
+
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
