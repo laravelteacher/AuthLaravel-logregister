@@ -4,7 +4,8 @@ Youtube: https://youtu.be/lLhEf78Sn8Y
 Make first  User Register & Login with API, Auth, Jwt in API, Auth, Jwt. (Part2)
 
 Install JWT Authentication Auth API in Laravel.(Part1)
-https://youtu.be/vpq6UBlOXfU
+
+Youtube: https://youtu.be/vpq6UBlOXfU
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
