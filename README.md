@@ -1,10 +1,9 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
-Youtube: https://youtu.be/lLhEf78Sn8Y
 
 Make first  User Register & Login with API, Auth, Jwt in API, Auth, Jwt. (Part2)
+Youtube: https://youtu.be/lLhEf78Sn8Y
 
 Install JWT Authentication Auth API in Laravel.(Part1)
-
 Youtube: https://youtu.be/vpq6UBlOXfU
 
 <p align="center">
